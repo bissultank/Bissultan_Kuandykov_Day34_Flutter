@@ -20,6 +20,12 @@ class NotesService {
   Future<void> deleteNote(String uid, String noteId) =>
       _col(uid).doc(noteId).delete();
 
+  Future<NoteModel?> getNoteById(String uid, String noteId) async {
+    final doc = await _col(uid).doc(noteId).get();
+    if (!doc.exists || doc.data() == null) return null;
+    return NoteModel.fromMap(doc.id, doc.data()!);
+  }
+
   // ── Real-time список (snapshot) ──────────────────────────────────────────
 
   Stream<List<NoteModel>> notesStream({
